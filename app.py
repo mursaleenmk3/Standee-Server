@@ -60,10 +60,14 @@ def stop_detection():
 
 @app.route('/set-message', methods=['POST'])
 def set_message():
-    data = request.json
-    msg = data.get("message", "")
-    write_file(TTS_FILE, msg)
-    return jsonify({"message": "TTS message set"})
+    try:
+        msg = request.data.decode('utf-8').strip()
+        if not msg:
+            return response(False, "Empty message", 400)
+        MESSAGE_FILE.write_text(msg)
+        return response(True, "Message saved", 200)
+    except Exception as e:
+        return response(False, f"Save error: {e}", 500)
 
 @app.route('/set-mode', methods=['POST'])
 def set_mode():
