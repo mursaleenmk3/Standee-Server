@@ -3,6 +3,7 @@ from pathlib import Path
 import os
 import subprocess
 import time
+from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
