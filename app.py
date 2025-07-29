@@ -16,7 +16,7 @@ BACKGROUND_DIR = SETTINGS_DIR / "background_music"
 TTS_FILE = SETTINGS_DIR / "greeting.txt"
 MODE_FILE = SETTINGS_DIR / "mode.txt"
 AUDIO_MODE_FILE = SETTINGS_DIR / "audio_mode.txt"
-BG_FLAG_FILE = SETTINGS_DIR / "background_music_flag.txt"
+BG_FLAG_FILE = Path("background_music_flag.txt")
 STATUS_FILE = SETTINGS_DIR / "detection_status.txt"
 MESSAGE_FILE = Path("latest_message.txt")
 # Create folders
