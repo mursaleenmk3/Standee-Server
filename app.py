@@ -116,7 +116,8 @@ def upload_audio():
 @app.route('/start-bg-music', methods=['POST'])
 def start_bg_music():
     try:
-        BG_FLAG_FILE.write_text("on")
+         mode = request.data.decode('utf-8').strip()
+        BG_FLAG_FILE.write_text(mode)
         return response(True, "Background music flag enabled", 200)
     except Exception as e:
         return response(False, f"Start music flag error: {str(e)}", 500)
