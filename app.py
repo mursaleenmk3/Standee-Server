@@ -16,7 +16,7 @@ MODE_FILE = SETTINGS_DIR / "mode.txt"
 AUDIO_MODE_FILE = SETTINGS_DIR / "audio_mode.txt"
 BG_FLAG_FILE = SETTINGS_DIR / "background_music_flag.txt"
 STATUS_FILE = SETTINGS_DIR / "detection_status.txt"
-
+MESSAGE_FILE = Path("latest_message.txt")
 # Create folders
 for d in [SETTINGS_DIR, AUDIO_DIR, BACKGROUND_DIR]:
     d.mkdir(parents=True, exist_ok=True)
@@ -68,6 +68,17 @@ def set_message():
         return response(True, "Message saved", 200)
     except Exception as e:
         return response(False, f"Save error: {e}", 500)
+
+@app.route('/get-message', methods=['GET'])
+def get_message():
+    try:
+        if MESSAGE_FILE.exists():
+            return jsonify({"message": MESSAGE_FILE.read_text().strip()})
+        else:
+            return jsonify({"message": ""})
+    except Exception as e:
+        return response(False, f"Error reading message: {e}", 500)
+
 
 @app.route('/set-mode', methods=['POST'])
 def set_mode():
