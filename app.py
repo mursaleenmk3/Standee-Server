@@ -38,10 +38,20 @@ def read_file(path, default=""):
 def home():
     return jsonify({"status": "Flask Server Running"})
 
+# Optional: global or file-based flag
+should_start = False
+
 @app.route('/start', methods=['POST'])
-def start_detection():
-    write_file(STATUS_FILE, "on")
-    return jsonify({"message": "Detection started"})
+def set_start_flag():
+    global should_start
+    should_start = True
+    return jsonify({"success": True, "message": "Start signal received."})
+
+@app.route('/check-start', methods=['GET'])
+def check_start_flag():
+    global should_start
+    return jsonify({"start": should_start})
+
 
 @app.route('/stop', methods=['POST'])
 def stop_detection():
