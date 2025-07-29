@@ -5,6 +5,7 @@ import subprocess
 import time
 
 app = Flask(__name__)
+CORS(app)
 
 BASE_DIR = Path(__file__).resolve().parent
 SETTINGS_DIR = BASE_DIR / "settings"
