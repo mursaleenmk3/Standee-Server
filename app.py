@@ -122,7 +122,7 @@ def start_bg_music():
         return response(False, f"Start music flag error: {str(e)}", 500)
 
 @app.route('/get-bg-music', methods=['GET'])
-def get_mode():
+def get_bg_music_status():
     try:
         if not BG_FLAG_FILE.exists():
             return jsonify({"mode": None, "message": "No mode set"}), 404
@@ -130,6 +130,7 @@ def get_mode():
         return jsonify({"mode": mode}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 @app.route('/upload-background', methods=['POST'])
 def upload_background():
