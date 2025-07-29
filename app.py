@@ -82,28 +82,28 @@ def get_message():
         return response(False, f"Error reading message: {e}", 500)
 
 
+# Save mode (POST)
 @app.route('/set-mode', methods=['POST'])
 def set_mode():
     try:
         mode = request.data.decode('utf-8').strip()
         if not mode:
-            return response(False, "Empty mode", 400)
+            return "Empty mode", 400
         MODE_FILE.write_text(mode)
-        return response(True, "Mode saved successfully", 200)
+        return "Mode saved", 200
     except Exception as e:
-        return response(False, f"Error saving mode: {str(e)}", 500)
+        return f"Error: {e}", 500
 
-# ✅ Route to get current mode (GET)
+# Get mode (GET)
 @app.route('/get-mode', methods=['GET'])
 def get_mode():
     try:
         if not MODE_FILE.exists():
-            return response(False, "Mode not set", 404)
-        mode = MODE_FILE.read_text().strip()
-        return jsonify({"success": True, "mode": mode}), 200
+            return "No mode set", 404
+        return MODE_FILE.read_text().strip(), 200
     except Exception as e:
-        return response(False, f"Error reading mode: {str(e)}", 500)
-
+        return f"Error: {e}", 500
+        
 @app.route('/upload-audio', methods=['POST'])
 def upload_audio():
     file = request.files.get("file")
