@@ -113,6 +113,24 @@ def upload_audio():
         return jsonify({"message": "Greeting audio uploaded"})
     return jsonify({"error": "No file uploaded"}), 400
 
+@app.route('/start-bg-music', methods=['POST'])
+def start_bg_music():
+    try:
+        BG_FLAG_FILE.write_text("on")
+        return response(True, "Background music flag enabled", 200)
+    except Exception as e:
+        return response(False, f"Start music flag error: {str(e)}", 500)
+
+@app.route('/get-bg-music', methods=['GET'])
+def get_mode():
+    try:
+        if not BG_FLAG_FILE.exists():
+            return jsonify({"mode": None, "message": "No mode set"}), 404
+        mode = BG_FLAG_FILE.read_text().strip()
+        return jsonify({"mode": mode}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/upload-background', methods=['POST'])
 def upload_background():
     file = request.files.get("file")
@@ -129,14 +147,7 @@ def toggle_background_music():
     write_file(BG_FLAG_FILE, "true" if enabled == "true" else "false")
     return jsonify({"message": f"Background music {'enabled' if enabled == 'true' else 'disabled'}"})
 
-@app.route('/set-audio-mode', methods=['POST'])
-def set_audio_mode():
-    data = request.json
-    mode = data.get("mode", "").lower()
-    if mode in ["wired", "bluetooth"]:
-        write_file(AUDIO_MODE_FILE, mode)
-        return jsonify({"message": f"Audio output set to {mode}"})
-    return jsonify({"error": "Invalid audio mode"}), 400
+
 
 @app.route('/next', methods=['POST'])
 def next_track():
