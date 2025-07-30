@@ -173,19 +173,17 @@ def upload_mp3():
             return jsonify({'success': False, 'message': 'Only MP3 files allowed'}), 400
 
         # Rename file to 'greetingaudio.mp3'
-        renamed_path = AUDIO_DIR / 'greetingaudio.mp3'
+        renamed_path = os.path.join(AUDIO_DIR, 'greetingaudio.mp3')
         file.save(renamed_path)
 
         return jsonify({
             'success': True,
             'message': 'File uploaded and saved as greetingaudio.mp3',
-            'path': str(renamed_path)
+            'path': renamed_path
         }), 200
 
     except Exception as e:
         return jsonify({'success': False, 'message': f'Upload failed: {str(e)}'}), 500
-
-
 
 
 @app.route('/get-greeting-mp3/<filename>', methods=['GET'])
