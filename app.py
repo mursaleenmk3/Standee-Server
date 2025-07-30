@@ -121,9 +121,11 @@ def start_bg_music():
     try:
         mode = request.data.decode('utf-8').strip()
         BG_FLAG_FILE.write_text(mode)
-        return response(True, "Background music flag enabled", 200)
+
+        return jsonify({'success': True, 'message': 'Background music flag enabled'}), 200
+
     except Exception as e:
-        return response(False, f"Start music flag error: {str(e)}", 500)
+        return jsonify({'success': False, 'message': f"Start music flag error: {str(e)}"}), 500
 
 @app.route('/get-bg-music', methods=['GET'])
 def get_bg_music_status():
