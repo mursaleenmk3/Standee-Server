@@ -150,7 +150,7 @@ def toggle_background_music():
     write_file(BG_FLAG_FILE, "true" if enabled == "true" else "false")
     return jsonify({"message": f"Background music {'enabled' if enabled == 'true' else 'disabled'}"})
 
-@app.route('/upload-greetin-mp3', methods=['POST'])
+@app.route('/upload-greeting-mp3', methods=['POST'])
 def upload_mp3():
     try:
         file = request.files.get('file')
