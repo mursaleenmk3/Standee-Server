@@ -6,6 +6,7 @@ import time
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from flask import send_from_directory
+from flask import send_file
 
 app = Flask(__name__)
 CORS(app)
@@ -185,12 +186,20 @@ def upload_greeting_mp3():
 
 
 
-@app.route("/get-greeting-mp3/<filename>", methods=["GET"])
+
+
+@app.route('/get-greeting-mp3/<filename>', methods=['GET'])
 def get_greeting_mp3(filename):
     try:
-        return send_from_directory(AUDIO_DIR, filename, as_attachment=False)
-    except FileNotFoundError:
-        return jsonify({"success": False, "message": "File not found"}), 404
+        file_path = os.path.join(AUDIO_DIR, filename)
+        if not os.path.isfile(file_path):
+            return jsonify({'success': False, 'message': 'File not found'}), 404
+
+        return send_file(file_path, mimetype='audio/mpeg')
+
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Error: {str(e)}'}), 500
+
 
 
         
