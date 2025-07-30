@@ -150,7 +150,19 @@ def toggle_background_music():
     write_file(BG_FLAG_FILE, "true" if enabled == "true" else "false")
     return jsonify({"message": f"Background music {'enabled' if enabled == 'true' else 'disabled'}"})
 
-
+@app.route('/upload-greetin-mp3', methods=['POST'])
+def upload_mp3():
+    try:
+        file = request.files.get('file')
+        if file and file.filename.endswith('.mp3'):
+            filename = secure_filename(file.filename)
+            save_path = AUDIO_DIR / filename
+            file.save(save_path)
+            return response(True, f"MP3 uploaded successfully as {filename}", 200)
+        else:
+            return response(False, "Invalid or missing MP3 file", 400)
+    except Exception as e:
+        return response(False, f"Upload error: {e}", 500)
 
 @app.route('/next', methods=['POST'])
 def next_track():
