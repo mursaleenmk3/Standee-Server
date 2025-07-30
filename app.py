@@ -151,11 +151,14 @@ def toggle_background_music():
     write_file(BG_FLAG_FILE, "true" if enabled == "true" else "false")
     return jsonify({"message": f"Background music {'enabled' if enabled == 'true' else 'disabled'}"})
 
-UPLOAD_DIR = Path("uploaded_mp3")
-UPLOAD_DIR.mkdir(exist_ok=True)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+AUDIO_DIR = os.path.join(BASE_DIR, 'settings', 'greeting_audio')
+
+# Ensure the directory exists
+os.makedirs(AUDIO_DIR, exist_ok=True)
 
 @app.route('/upload-greeting-mp3', methods=['POST'])
-def upload_mp3():
+def upload_greeting_mp3():
     try:
         if 'file' not in request.files:
             return jsonify({'success': False, 'message': 'No file part'}), 400
@@ -166,12 +169,16 @@ def upload_mp3():
             return jsonify({'success': False, 'message': 'No selected file'}), 400
 
         if not file.filename.lower().endswith('.mp3'):
-            return jsonify({'success': False, 'message': 'Only MP3 files allowed'}), 400
+            return jsonify({'success': False, 'message': 'Only MP3 files are allowed'}), 400
 
-        save_path = UPLOAD_DIR / file.filename
+        save_path = os.path.join(AUDIO_DIR, file.filename)
         file.save(save_path)
 
-        return jsonify({'success': True, 'message': f'File {file.filename} uploaded successfully'}), 200
+        return jsonify({
+            'success': True,
+            'message': f'File "{file.filename}" uploaded successfully',
+            'path': save_path  # show full path
+        }), 200
 
     except Exception as e:
         return jsonify({'success': False, 'message': f'Upload failed: {str(e)}'}), 500
