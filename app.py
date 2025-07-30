@@ -159,7 +159,7 @@ AUDIO_DIR = os.path.join(BASE_DIR, 'settings', 'greeting_audio')
 os.makedirs(AUDIO_DIR, exist_ok=True)
 
 @app.route('/upload-greeting-mp3', methods=['POST'])
-def upload_greeting_mp3():
+def upload_mp3():
     try:
         if 'file' not in request.files:
             return jsonify({'success': False, 'message': 'No file part'}), 400
@@ -170,20 +170,20 @@ def upload_greeting_mp3():
             return jsonify({'success': False, 'message': 'No selected file'}), 400
 
         if not file.filename.lower().endswith('.mp3'):
-            return jsonify({'success': False, 'message': 'Only MP3 files are allowed'}), 400
+            return jsonify({'success': False, 'message': 'Only MP3 files allowed'}), 400
 
-        save_path = os.path.join(AUDIO_DIR, file.filename)
-        file.save(save_path)
+        # Rename file to 'greetingaudio.mp3'
+        renamed_path = AUDIO_DIR / 'greetingaudio.mp3'
+        file.save(renamed_path)
 
         return jsonify({
             'success': True,
-            'message': f'File "{file.filename}" uploaded successfully',
-            'path': save_path  # show full path
+            'message': 'File uploaded and saved as greetingaudio.mp3',
+            'path': str(renamed_path)
         }), 200
 
     except Exception as e:
         return jsonify({'success': False, 'message': f'Upload failed: {str(e)}'}), 500
-
 
 
 
